@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="tr" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brick Studio | K-12 Blok Editörü ve 3D Simülasyon</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bambu: {
+              green: '#00ae42',
+              greenDark: '#00993a',
+              orange: '#ff6a00'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Apple & Bambu Lab Tasarim CSS -->
+  <link rel="stylesheet" href="css/studio.css">
+</head>
+<body class="bg-[#f8fafc] text-slate-800 h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- ========================================================================= -->
+  <!-- 1. APPLE / BAMBU LAB HEADER                                               -->
+  <!-- ========================================================================= -->
+  <header class="h-16 bg-white border-b border-slate-200 px-5 flex items-center justify-between z-30 shrink-0 shadow-sm">
+    
+    <!-- Sol: Logo & Arac Modeli Secici -->
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-500 to-[#00ae42] flex items-center justify-center shadow-md shadow-emerald-500/20 text-white font-black text-lg">
+          <i class="fas fa-cube"></i>
+        </div>
+        <h1 class="text-base font-extrabold tracking-tight text-slate-900">Brick <span class="text-[#00ae42]">Studio</span></h1>
+        <span class="text-[10px] text-slate-400 font-semibold px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 ml-0.5">Community</span>
+      </div>
+
+      <!-- Araç Modeli Seçici -->
+      <div class="flex items-center ml-3 pl-4 border-l border-slate-200">
+        <span class="text-[11px] text-slate-500 font-bold mr-2 flex items-center gap-1.5">
+          <i class="fas fa-truck-monster text-emerald-600"></i> <span id="label-model-select">Model:</span>
+        </span>
+        <select id="header-model-select" onchange="CyberBrickSimulation.loadModel(this.value)" 
+          class="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-3 py-1.5 outline-none focus:border-[#00ae42] transition-colors cursor-pointer shadow-sm">
+          <option value="forklift" selected>BrickForklift (Forklift ve Flatbed)</option>
+          <option value="truck">BrickTruck (MakerWorld Kei-Kamyon)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sağ: Çalıştır, Sıfırla ve Yardımcı Butonlar -->
+    <div class="flex items-center gap-2">
+      <!-- Kodu Çalıştır Butonu -->
+      <button id="btn-run-code" onclick="CyberBrickApp.handleRunCode()" class="btn-bambu-primary">
+        <i class="fas fa-play text-xs"></i>
+        <span id="btn-run-code-text">Çalıştır</span>
+      </button>
+
+      <!-- Durdur Butonu -->
+      <button id="btn-stop-code" onclick="CyberBrickApp.handleStopCode()" class="hidden px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all">
+        <i class="fas fa-stop text-xs"></i>
+        <span id="btn-stop-code-text">Durdur</span>
+      </button>
+
+      <!-- Sıfırla -->
+      <button id="btn-reset-robot" onclick="CyberBrickSimulation.resetRobot(true)" title="Robotu ve Sahneyi Başlangıç Noktasına Sıfırla"
+        class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors">
+        <i class="fas fa-undo-alt text-xs"></i>
+      </button>
+
+      <!-- Dil Seçici (5 Popüler Dil) -->
+      <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-semibold transition-colors border border-slate-200/80 shadow-sm ml-1">
+        <i class="fas fa-globe text-[#00ae42] text-xs"></i>
+        <select id="select-language" onchange="CyberBrickApp.setLanguage(this.value)" 
+          class="bg-transparent text-slate-800 text-xs font-bold outline-none cursor-pointer pr-1">
+          <option value="tr" selected>Türkçe (TR)</option>
+          <option value="en">English (EN)</option>
+          <option value="de">Deutsch (DE)</option>
+          <option value="es">Español (ES)</option>
+          <option value="fr">Français (FR)</option>
+        </select>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ANA ÇALIŞMA PANELLERİ                                                 -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 relative overflow-hidden">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- PANEL 1: BLOK EDİTÖRÜ VE BÜYÜTÜLMÜŞ 3D SİMÜLATÖR SAHNESİ             -->
+    <!-- --------------------------------------------------------------------- -->
+    <section id="main-pane-editor" class="w-full h-full flex overflow-hidden">
+      
+      <!-- SOL YARI: Tamamen Görsel Google Blockly Çalışma Alanı (%38 Genişlik) -->
+      <div id="blockly-wrapper" class="w-[38%] h-full relative flex flex-col bg-white border-r border-slate-200 min-w-[320px] transition-all duration-300">
+        <!-- Editör Üst Araç Çubuğu -->
+        <div class="h-10 px-3.5 bg-slate-50/90 border-b border-slate-200 flex items-center justify-between shrink-0 select-none">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-800">
+            <i class="fas fa-shapes text-emerald-600 text-xs"></i>
+            <span id="label-editor-title">Blok Kod Editörü</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="CyberBrickBlockly.loadDefaultBlocks(true)" id="btn-sample-code" title="Örnek başlangıç bloklarını yükle" 
+              class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-[11px] font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer">
+              <i class="fas fa-magic text-emerald-600 text-[10px]"></i>
+              <span id="btn-sample-code-text">Örnek Kod</span>
+            </button>
+            <button onclick="CyberBrickApp.showPythonCodeModal()" id="btn-view-python" title="MicroPython kodunu görüntüle" 
+              class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-[11px] font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer">
+              <i class="fab fa-python text-amber-500 text-[11px]"></i>
+              <span>Python</span>
+            </button>
+            <button onclick="if(confirm('Tüm bloklar silinsin mi?')) CyberBrickBlockly.workspace.clear();" id="btn-clear-code" title="Temizle" 
+              class="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-500 hover:text-rose-600 text-xs flex items-center justify-center transition-colors cursor-pointer">
+              <i class="fas fa-trash-alt text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Google Blockly Enjeksiyon Alanı -->
+        <div class="flex-1 relative w-full h-full min-h-0 overflow-hidden">
+          <div id="blockly-div" class="absolute inset-0 w-full h-full"></div>
+        </div>
+      </div>
+
+      <!-- SAĞ YARI: Büyütülmüş Canlı 3D Simülasyon Sahnesi (%62 Genişlik ve Tam Yükseklik) -->
+      <div id="stage-wrapper" class="w-[62%] h-full relative flex flex-col bg-[#f8fafc] min-w-0 transition-all duration-300">
+        
+        <!-- Canli 3D Sahne -->
+        <div class="w-full h-full relative overflow-hidden">
+          <div id="viewport-canvas-container" class="absolute inset-0 w-full h-full"></div>
+
+          <!-- Ust HUD: Parkur ve Kamera Kontrolleri -->
+          <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+            <!-- Parkur Hap Butonlari -->
+            <div class="glass-surface rounded-full p-1 shadow-md pointer-events-auto flex items-center gap-1 text-[11px]">
+              <button onclick="CyberBrickSimulation.loadArena('warehouse')" 
+                class="px-2.5 py-1 rounded-full font-semibold hover:bg-slate-100 text-slate-700 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-boxes text-amber-500"></i>
+                <span id="label-arena-warehouse">Depo</span>
+              </button>
+              <button onclick="CyberBrickSimulation.loadArena('line_track')" 
+                class="px-2.5 py-1 rounded-full font-semibold hover:bg-slate-100 text-slate-700 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-road text-emerald-500"></i>
+                <span id="label-arena-track">Çizgi Pisti</span>
+              </button>
+              <button onclick="CyberBrickSimulation.loadArena('sandbox')" 
+                class="px-2.5 py-1 rounded-full font-semibold hover:bg-slate-100 text-slate-700 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-shapes text-indigo-500"></i>
+                <span id="label-arena-sandbox">Serbest Alan</span>
+              </button>
+            </div>
+
+            <!-- STL Yükle Butonu & Kamera Modlari -->
+            <div class="flex items-center gap-1.5 pointer-events-auto">
+              <button onclick="document.getElementById('input-stl-upload').click()" 
+                title="Bilgisayardan STL Dosyası Yükle (veya Sahneye Sürükle-Bırak)" 
+                class="glass-surface px-3 py-1 rounded-full shadow-md hover:bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5 text-[11px] transition-colors border border-slate-200">
+                <i class="fas fa-cube text-emerald-600"></i>
+                <span id="label-load-stl">STL Yükle</span>
+              </button>
+              <input id="input-stl-upload" type="file" accept=".stl" multiple style="display:none" onchange="CyberBrickSimulation.handleStlFileUpload(event)" />
+
+              <div class="glass-surface rounded-full p-1 shadow-md flex items-center gap-1 text-[11px]">
+                <button onclick="CyberBrickSimulation.setCameraMode('orbit')" title="Serbest Kamera (Orbit)" class="px-2 py-1 rounded-full hover:bg-slate-100 text-slate-700 font-semibold">
+                  <i class="fas fa-globe"></i>
+                </button>
+                <button onclick="CyberBrickSimulation.setCameraMode('chase')" title="Takip Kamerası" class="px-2 py-1 rounded-full hover:bg-slate-100 text-slate-700 font-semibold">
+                  <i class="fas fa-video"></i>
+                </button>
+                <button onclick="CyberBrickSimulation.setCameraMode('topdown')" title="Kuşbakışı Kamera" class="px-2 py-1 rounded-full hover:bg-slate-100 text-slate-700 font-semibold">
+                  <i class="fas fa-map"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alt HUD: Minimalist Yüzen Kontrol & Telemetri Dock'u -->
+          <div class="absolute bottom-4 left-4 right-4 z-10 pointer-events-none flex items-end justify-between">
+            
+            <!-- Sol: Minimalist Yüzen Cam Sürüş Kontrolleri -->
+            <div class="glass-surface p-2 rounded-2xl shadow-lg border border-slate-200/80 pointer-events-auto flex items-center">
+              <!-- D-Pad: Q (İndir), W (İleri), E (Kaldır) / A (Sol), S (Geri), D (Sağ) -->
+              <div class="grid grid-cols-3 gap-1.5 w-28">
+                <!-- Q / İndir -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('lift-down')" ontouchstart="CyberBrickApp.handleDpadPress('lift-down')"
+                  title="Çatalı/Kolu İndir (Q)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold font-mono text-xs flex items-center justify-center active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  Q
+                </button>
+                <!-- W / İleri (Yukarı Ok) -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('up')" onmouseup="CyberBrickApp.handleDpadRelease()"
+                  ontouchstart="CyberBrickApp.handleDpadPress('up')" ontouchend="CyberBrickApp.handleDpadRelease()"
+                  title="İleri (W)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  <i class="fas fa-chevron-up"></i>
+                </button>
+                <!-- E / Kaldır -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('lift-up')" ontouchstart="CyberBrickApp.handleDpadPress('lift-up')"
+                  title="Çatalı/Kolu Kaldır (E)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold font-mono text-xs flex items-center justify-center active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  E
+                </button>
+
+                <!-- A / Sola Dön (Sol Ok) -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('left')" onmouseup="CyberBrickApp.handleDpadRelease()"
+                  ontouchstart="CyberBrickApp.handleDpadPress('left')" ontouchend="CyberBrickApp.handleDpadRelease()"
+                  title="Sola Dön (A)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <!-- S / Geri (Aşağı Ok) -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('down')" onmouseup="CyberBrickApp.handleDpadRelease()"
+                  ontouchstart="CyberBrickApp.handleDpadPress('down')" ontouchend="CyberBrickApp.handleDpadRelease()"
+                  title="Geri (S)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+                <!-- D / Sağa Dön (Sağ Ok) -->
+                <button onmousedown="CyberBrickApp.handleDpadPress('right')" onmouseup="CyberBrickApp.handleDpadRelease()"
+                  ontouchstart="CyberBrickApp.handleDpadPress('right')" ontouchend="CyberBrickApp.handleDpadRelease()"
+                  title="Sağa Dön (D)" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs active:scale-95 shadow-sm transition-all border border-slate-200/60">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Orta: Telemetri HUD -->
+            <div class="glass-surface px-4 py-2 rounded-2xl shadow-lg border border-slate-200/80 pointer-events-auto flex items-center gap-4 text-xs font-mono">
+              <div>
+                <span id="label-hud-dist" class="text-[9px] text-slate-400 block uppercase font-sans font-semibold">Mesafe</span>
+                <strong id="hud-distance" class="text-emerald-600 font-bold">-- cm</strong>
+              </div>
+              <div class="h-6 w-[1px] bg-slate-200"></div>
+              <div>
+                <span id="label-hud-speed" class="text-[9px] text-slate-400 block uppercase font-sans font-semibold">Hız</span>
+                <strong id="hud-speed" class="text-slate-800 font-bold">0.0 km/s</strong>
+              </div>
+              <div class="h-6 w-[1px] bg-slate-200"></div>
+              <div>
+                <span id="label-hud-fork" class="text-[9px] text-slate-400 block uppercase font-sans font-semibold">Çatal / Açı</span>
+                <strong id="hud-fork" class="text-amber-600 font-bold">50%</strong>
+              </div>
+              <div class="h-6 w-[1px] bg-slate-200"></div>
+              <div>
+                <span id="label-hud-battery" class="text-[9px] text-slate-400 block uppercase font-sans font-semibold">Pil</span>
+                <strong id="hud-battery" class="text-indigo-600 font-bold">7.40 V</strong>
+              </div>
+            </div>
+
+            <!-- Sag: Tam Ekran / Normal Boyut Gecis Butonu -->
+            <div class="glass-surface p-1 rounded-2xl shadow-lg border border-slate-200/80 pointer-events-auto flex items-center">
+              <button id="btn-toggle-ratio" onclick="CyberBrickApp.toggleSimulationFullscreen()" 
+                title="Simülasyon Boyutunu Değiştir" 
+                class="px-3 py-1.5 rounded-xl hover:bg-slate-100 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition-all">
+                <i id="btn-toggle-ratio-icon" class="fas fa-expand-alt text-emerald-600"></i>
+                <span id="btn-toggle-ratio-text">Tam Ekran</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Arka Plan Gizli Log Kapsayicisi -->
+          <div id="serial-monitor-logs" style="display:none;"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- PANEL 2: DEVRE VE PIN SEMASI (RESMI CYBERBRICK APP ILHAMI)             -->
+    <!-- --------------------------------------------------------------------- -->
+    <section id="main-pane-circuit" class="w-full h-full hidden">
+      <div id="circuit-view-container" class="w-full h-full"></div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MODALLAR VE BILDIRIM TOASTLARI                                        -->
+  <!-- ========================================================================= -->
+
+  <!-- Genel Modal -->
+  <div id="modal-generic" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-slate-200 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden fade-in-smooth">
+      <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <h3 id="modal-generic-title" class="text-sm font-bold text-slate-900 flex items-center"></h3>
+        <button class="modal-close-btn w-7 h-7 rounded-full bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center text-xs">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="modal-generic-body" class="p-5 max-h-[75vh] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <!-- Toast Bildirimi -->
+  <div id="toast-notification" 
+    class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 bg-white border border-emerald-500/40 text-slate-900 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-semibold">
+    <i class="fas fa-check-circle text-emerald-500 text-base"></i>
+    <span id="toast-text"></span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. GEREKLI KUTUPHANELER VE BETIKLER                                      -->
+  <!-- ========================================================================= -->
+
+  <!-- Three.js, OrbitControls & STLLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+
+  <!-- Google Blockly Core, JavaScript & Python Generators -->
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/msg/tr.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- CyberBrick Modulleri -->
+  <script src="js/cyberbrick-api.js"></script>
+  <script src="js/cyberbrick-models.js"></script>
+  <script src="js/cyberbrick-actions.js"></script>
+  <script src="js/circuit-view.js"></script>
+  <script src="js/simulation-3d.js"></script>
+  <script src="js/blockly-cyberbrick.js"></script>
+  <script src="js/virtual-runtime.js"></script>
+  <script src="js/parts-library.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,675 @@
+/* ==========================================================================
+   CyberBrick Eğitim ve Geliştirme Stüdyosu
+   Apple & Bambu Lab Minimalist / Premium Design System
+   K-12 Dostu, Temiz, Yüksek Okunabilirlik ve Akıcı Animasyonlar
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Bambu Lab & Apple Light Theme (Varsayılan) */
+  --cb-bg-base: #f8fafc;
+  --cb-bg-surface: #ffffff;
+  --cb-bg-surface-elevated: #ffffff;
+  --cb-bg-subtle: #f1f5f9;
+  --cb-border: #e2e8f0;
+  --cb-border-subtle: #edf2f7;
+  
+  --cb-text-main: #0f172a;
+  --cb-text-muted: #64748b;
+  --cb-text-subtle: #94a3b8;
+
+  /* Bambu Lab Resmi Renkleri */
+  --cb-bambu-green: #00ae42;
+  --cb-bambu-green-hover: #00993a;
+  --cb-bambu-green-light: #e8f7ee;
+  --cb-bambu-orange: #ff6a00;
+  --cb-bambu-orange-light: #fff3eb;
+  
+  --cb-accent-cyan: #00b4d8;
+  --cb-accent-indigo: #6366f1;
+  --cb-accent-amber: #f59e0b;
+  --cb-accent-rose: #f43f5e;
+
+  --cb-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --cb-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --cb-shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --cb-shadow-apple: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Karanlık Mod Desteği */
+.dark {
+  --cb-bg-base: #0b0f19;
+  --cb-bg-surface: #111827;
+  --cb-bg-surface-elevated: #1f2937;
+  --cb-bg-subtle: #1e293b;
+  --cb-border: #2d3748;
+  --cb-border-subtle: #1f2937;
+  
+  --cb-text-main: #f8fafc;
+  --cb-text-muted: #94a3b8;
+  --cb-text-subtle: #64748b;
+
+  --cb-bambu-green-light: rgba(0, 174, 66, 0.15);
+  --cb-bambu-orange-light: rgba(255, 106, 0, 0.15);
+
+  --cb-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --cb-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --cb-shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.6);
+  --cb-shadow-apple: 0 20px 40px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cb-bg-base);
+  color: var(--cb-text-main);
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Apple Tarzı İnce ve Zarif Kaydırma Çubukları */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+}
+
+/* Apple Segmented Control (Pill Tabs) */
+.apple-segmented-control {
+  background-color: var(--cb-bg-subtle);
+  padding: 4px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cb-border-subtle);
+}
+
+.apple-segmented-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cb-text-muted);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.apple-segmented-btn:hover {
+  color: var(--cb-text-main);
+}
+
+.apple-segmented-btn.active {
+  background-color: var(--cb-bg-surface);
+  color: var(--cb-bambu-green);
+  box-shadow: var(--cb-shadow-sm);
+}
+
+.dark .apple-segmented-btn.active {
+  background-color: var(--cb-bg-surface-elevated);
+  color: #34d399;
+}
+
+/* Bambu Lab Yeşil Pill Buton */
+.btn-bambu-primary {
+  background-color: var(--cb-bambu-green);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 7px 18px;
+  font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 174, 66, 0.3);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-bambu-primary:hover {
+  background-color: var(--cb-bambu-green-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 174, 66, 0.38);
+}
+
+.btn-bambu-primary:active {
+  transform: translateY(0);
+}
+
+/* Apple Glass Panel */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-surface {
+  background: rgba(17, 24, 39, 0.88);
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+/* 3D Görsel Sahne Kapsayıcısı */
+#viewport-canvas-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #eef2f6 100%);
+}
+
+.dark #viewport-canvas-container {
+  background: radial-gradient(circle at 50% 30%, #1e2638 0%, #0c1017 100%);
+}
+
+/* Devre & Pin Şeması Bağlantı Çizgisi Animasyonları */
+.circuit-wire {
+  stroke-dasharray: 6;
+  animation: wireFlow 1.2s linear infinite;
+}
+
+@keyframes wireFlow {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Model Seçici Kartı */
+.model-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid var(--cb-border);
+}
+
+.model-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--cb-bambu-green);
+  box-shadow: var(--cb-shadow-md);
+}
+
+.model-card.active {
+  border-color: var(--cb-bambu-green);
+  background: var(--cb-bambu-green-light);
+}
+
+/* Gutter / Splitter */
+.gutter {
+  background-color: var(--cb-border);
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+.gutter:hover, .gutter:active {
+  background-color: var(--cb-bambu-green);
+}
+.gutter.gutter-horizontal {
+  cursor: col-resize;
+  width: 5px;
+}
+.gutter.gutter-vertical {
+  cursor: row-resize;
+  height: 5px;
+}
+
+/* CodeMirror Custom Light / Dark */
+.CodeMirror {
+  height: 100% !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  line-height: 1.6;
+}
+
+/* ========================================================================== */
+/* BAMBU STUDIO PREMIUM BLOCKLY THEME & WORKSPACE STYLING                     */
+/* ========================================================================== */
+
+/* Toolbox Sidebar */
+.blocklyToolboxDiv {
+  background-color: #f8fafc !important;
+  border-right: 1px solid #e2e8f0 !important;
+  padding: 10px 8px !important;
+  font-family: var(--font-sans) !important;
+  user-select: none !important;
+}
+
+.dark .blocklyToolboxDiv {
+  background-color: #0f172a !important;
+  border-right: 1px solid #1e293b !important;
+}
+
+/* Category Row - Classic & Modern Toolbox Support */
+.blocklyTreeRow,
+.blocklyToolboxCategory {
+  height: 38px !important;
+  line-height: 38px !important;
+  padding: 0 12px !important;
+  margin: 3px 4px !important;
+  border-radius: 10px !important;
+  border: 1px solid transparent !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+.blocklyTreeRow:hover,
+.blocklyToolboxCategory:hover {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+}
+
+.dark .blocklyTreeRow:hover,
+.dark .blocklyToolboxCategory:hover {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+}
+
+/* Selected Category (Elevated Bambu / Apple Card) */
+.blocklyTreeRow.blocklyTreeSelected,
+.blocklyToolboxCategory.blocklyTreeSelected,
+.blocklyToolboxCategory.blocklyToolboxSelected,
+.blocklyToolboxCategory[aria-selected="true"],
+.blocklyToolboxSelected {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.dark .blocklyTreeRow.blocklyTreeSelected,
+.dark .blocklyToolboxCategory.blocklyTreeSelected,
+.dark .blocklyToolboxCategory.blocklyToolboxSelected,
+.dark .blocklyToolboxCategory[aria-selected="true"],
+.dark .blocklyToolboxSelected {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Active Indicator Bar on Left */
+.blocklyTreeRow.blocklyTreeSelected::before,
+.blocklyToolboxCategory.blocklyTreeSelected::before,
+.blocklyToolboxCategory.blocklyToolboxSelected::before,
+.blocklyToolboxCategory[aria-selected="true"]::before,
+.blocklyToolboxSelected::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3.5px;
+  height: 20px;
+  background-color: #cbf026 !important;
+  box-shadow: 0 0 8px rgba(203, 240, 38, 0.6) !important;
+  border-radius: 2px !important;
+}
+
+/* Category Color Icon (Round glowing indicator dot) */
+.blocklyTreeIcon,
+.blocklyToolboxCategory .blocklyTreeIcon,
+.blocklyToolboxCategoryIcon {
+  width: 9px !important;
+  height: 9px !important;
+  min-width: 9px !important;
+  min-height: 9px !important;
+  border-radius: 50% !important;
+  margin-right: 10px !important;
+  margin-left: 2px !important;
+  border: none !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  flex-shrink: 0 !important;
+}
+
+.dark .blocklyTreeIcon,
+.dark .blocklyToolboxCategoryIcon {
+  box-shadow: 0 0 0 2px #1e293b, 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Category Label Typography - Normal State */
+.blocklyTreeLabel,
+.blocklyToolboxCategoryLabel,
+.blocklyToolboxCategory span,
+.blocklyTreeRow span {
+  font-family: var(--font-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  letter-spacing: -0.01em !important;
+  transition: color 0.15s ease !important;
+}
+
+/* Category Label - Hover State */
+.blocklyTreeRow:hover .blocklyTreeLabel,
+.blocklyTreeRow:hover span,
+.blocklyToolboxCategory:hover .blocklyToolboxCategoryLabel,
+.blocklyToolboxCategory:hover span {
+  color: #0f172a !important;
+}
+
+/* Category Label - Selected State (Never white-on-white) */
+.blocklyTreeRow.blocklyTreeSelected .blocklyTreeLabel,
+.blocklyToolboxCategory.blocklyTreeSelected .blocklyTreeLabel,
+.blocklyToolboxCategory.blocklyTreeSelected .blocklyToolboxCategoryLabel,
+.blocklyToolboxCategory.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
+.blocklyToolboxCategory[aria-selected="true"] .blocklyToolboxCategoryLabel,
+.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
+.blocklyToolboxSelected span,
+.blocklyTreeRow.blocklyTreeSelected span,
+.blocklyToolboxCategory.blocklyToolboxSelected span,
+.blocklyToolboxCategory[aria-selected="true"] span {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+/* Dark Mode Category Labels */
+.dark .blocklyTreeLabel,
+.dark .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxCategory span,
+.dark .blocklyTreeRow span {
+  color: #94a3b8 !important;
+}
+
+.dark .blocklyTreeRow:hover .blocklyTreeLabel,
+.dark .blocklyTreeRow:hover span,
+.dark .blocklyToolboxCategory:hover .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxCategory:hover span {
+  color: #f8fafc !important;
+}
+
+.dark .blocklyTreeRow.blocklyTreeSelected .blocklyTreeLabel,
+.dark .blocklyToolboxCategory.blocklyToolboxSelected .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxCategory[aria-selected="true"] .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxSelected .blocklyToolboxCategoryLabel,
+.dark .blocklyToolboxSelected span,
+.dark .blocklyToolboxCategory.blocklyToolboxSelected span {
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+}
+
+/* Flyout (Drawer holding the available blocks) */
+.blocklyFlyoutBackground {
+  fill: #ffffff !important;
+  fill-opacity: 0.98 !important;
+  stroke: #e2e8f0 !important;
+  stroke-width: 1px !important;
+  filter: drop-shadow(6px 0 24px rgba(0, 0, 0, 0.06)) !important;
+}
+
+.dark .blocklyFlyoutBackground {
+  fill: #0f172a !important;
+  fill-opacity: 0.98 !important;
+  stroke: #1e293b !important;
+  filter: drop-shadow(6px 0 24px rgba(0, 0, 0, 0.35)) !important;
+}
+
+/* Blocks Rendering Styling */
+.blocklyPath {
+  stroke-width: 1.5px !important;
+  stroke: rgba(0, 0, 0, 0.12) !important;
+}
+
+.dark .blocklyPath {
+  stroke: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Smooth Soft Drop-Shadow for Draggable Blocks */
+.blocklyDraggable > .blocklyPath {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.08));
+}
+
+.dark .blocklyDraggable > .blocklyPath {
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
+}
+
+/* Block Text Typography */
+.blocklyText {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Default block text color for dark blocks (Orange, Blue, Pink, Purple, Red) */
+.blocklyDraggable text.blocklyText {
+  fill: #ffffff;
+}
+
+/* Flyout labels and buttons must be dark slate on white drawer */
+.blocklyFlyoutLabelText,
+.blocklyFlyoutHeading text,
+.blocklyFlyoutLabel text,
+.blocklyFlyoutButton text {
+  fill: #0f172a !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+}
+
+/* Cyber-Lime Blocks (#cbf026 / #d2f829) MUST HAVE bold dark slate typography */
+path[fill*="cbf026" i] ~ text.blocklyText,
+path[fill*="CBF026"] ~ text.blocklyText,
+path[fill*="203, 240, 38"] ~ text.blocklyText,
+path[fill*="d2f829" i] ~ text.blocklyText,
+path[fill*="ccf226" i] ~ text.blocklyText {
+  fill: #182230 !important;
+  font-weight: 700 !important;
+}
+
+/* Dropdown capsule on block */
+.blocklyFieldDropdown rect {
+  rx: 6px !important;
+  ry: 6px !important;
+  fill: #182230 !important;
+  fill-opacity: 0.88 !important;
+}
+
+.blocklyFieldDropdown text.blocklyText {
+  fill: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Editable Text / Input Pills (Number & Text input capsules) */
+.blocklyEditableText rect {
+  rx: 7px !important;
+  ry: 7px !important;
+  fill: #ffffff !important;
+  fill-opacity: 1 !important;
+  stroke: rgba(0, 0, 0, 0.22) !important;
+  stroke-width: 1.5px !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.06)) !important;
+  transition: stroke 0.2s, stroke-width 0.2s !important;
+}
+
+.blocklyEditableText:hover rect,
+.blocklyEditableText:focus-within rect {
+  stroke: #a8cc0e !important;
+  stroke-width: 2px !important;
+}
+
+/* Make sure text INSIDE editable fields is ALWAYS crisp dark */
+.blocklyEditableText text,
+.blocklyEditableText .blocklyText,
+g.blocklyEditableText text,
+g.blocklyEditableText .blocklyText,
+.blocklyFieldRectText,
+text.blocklyText.blocklyEditableText {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+
+.dark .blocklyEditableText rect {
+  fill: #1e293b !important;
+  stroke: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark .blocklyEditableText text,
+.dark .blocklyEditableText .blocklyText {
+  fill: #f8fafc !important;
+  color: #f8fafc !important;
+}
+
+/* Dropdown Menu Popup (Blockly Menu) */
+.blocklyDropdownMenu,
+.goog-menu {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 6px !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  font-family: var(--font-sans) !important;
+  z-index: 99999 !important;
+}
+
+.blocklyMenuItem,
+.goog-menuitem {
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Force all text inside dropdown menu to dark slate - no white on white */
+.blocklyMenuItem,
+.blocklyMenuItem *,
+.blocklyMenuItemContent,
+.blocklyMenuItemContent *,
+.goog-menuitem,
+.goog-menuitem *,
+.goog-menuitem-content,
+.goog-menuitem-content * {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+.blocklyMenuItemHighlight,
+.goog-menuitem-highlight {
+  background-color: #f1f5f9 !important;
+}
+
+.blocklyMenuItemHighlight,
+.blocklyMenuItemHighlight *,
+.goog-menuitem-highlight,
+.goog-menuitem-highlight * {
+  color: #0f172a !important;
+}
+
+/* Selected item with Cyber-Lime brand pill */
+.blocklyMenuItemSelected,
+.goog-menuitem-selected {
+  background-color: #cbf026 !important;
+}
+
+.blocklyMenuItemSelected,
+.blocklyMenuItemSelected *,
+.goog-menuitem-selected,
+.goog-menuitem-selected * {
+  color: #182230 !important;
+  font-weight: 700 !important;
+}
+
+/* Scrollbars (macOS / Bambu style) */
+.blocklyScrollbarHandle {
+  rx: 4px !important;
+  ry: 4px !important;
+  fill: #cbd5e1 !important;
+  fill-opacity: 0.65 !important;
+  transition: fill-opacity 0.2s, fill 0.2s !important;
+}
+
+.blocklyScrollbarHandle:hover {
+  fill: #94a3b8 !important;
+  fill-opacity: 0.9 !important;
+}
+
+.dark .blocklyScrollbarHandle {
+  fill: #475569 !important;
+  fill-opacity: 0.65 !important;
+}
+.dark .blocklyScrollbarHandle:hover {
+  fill: #64748b !important;
+  fill-opacity: 0.9 !important;
+}
+
+/* Zoom & Trashcan Widget Buttons */
+.blocklyZoom > image,
+.blocklyTrash > image {
+  opacity: 0.75;
+  transition: opacity 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.blocklyZoom > image:hover,
+.blocklyTrash > image:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Pulse Rozeti */
+.badge-live-pulse {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.badge-live-pulse::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--cb-bambu-green);
+  box-shadow: 0 0 0 rgba(0, 174, 66, 0.4);
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(0, 174, 66, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(0, 174, 66, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 174, 66, 0); }
+}
+
+/* Yumuşak Fade-In */
+.fade-in-smooth {
+  animation: fadeInSmooth 0.2s ease-out;
+}
+@keyframes fadeInSmooth {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 50/50 Alanları İçin Tam Boyutlandırma Güvencesi */
+#blockly-div {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+#viewport-canvas-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+#viewport-canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
