@@ -1,5 +1,8 @@
 # Brick Studio
 
+<img width="190" height="67" alt="image" src="https://github.com/user-attachments/assets/80cf6531-1f5d-45d4-8a74-ec4a69449f23" />
+
+
 ### Independent Open-Source K-12 Robotics, 3D Simulation & Physical Computing Platform
 #### A Community Initiative & Ecosystem Proposal for Bambu Lab Maker's Supply & MakerWorld
 
